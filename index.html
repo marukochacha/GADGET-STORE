@@ -28,7 +28,7 @@
     font-family:'Nunito', sans-serif;
     background:var(--pink-bg);
     color:var(--ink);
-    padding-bottom:78px;
+    padding-bottom:24px;
   }
   h1,h2,h3{ font-family:'Baloo 2', sans-serif; margin:0; }
   button{ font-family:inherit; }
@@ -135,6 +135,16 @@
   }
   @media(max-width:420px){ header.top .page-title{ display:none; } }
 
+  .home-btn{
+    flex-shrink:0; display:flex; align-items:center; gap:6px;
+    border:1.5px solid rgba(255,255,255,.5); background:rgba(255,255,255,.16);
+    color:#fff; font-weight:800; font-size:.72rem; letter-spacing:.02em;
+    padding:8px 13px; border-radius:999px; cursor:pointer; transition:.2s;
+  }
+  .home-btn:hover{ background:rgba(255,255,255,.32); }
+  .home-btn svg{ width:15px; height:15px; }
+  @media(max-width:380px){ .home-btn span{ display:none; } }
+
   main{ max-width:1180px; margin:0 auto; padding:26px 18px 40px; }
 
   .page{ display:none; }
@@ -152,14 +162,35 @@
   .section-heading .sub{ color:var(--pink-mid); font-size:.82rem; margin-left:auto; font-weight:700; }
   .lead-text{ margin:8px 0 18px; color:#8A5468; font-size:.85rem; max-width:520px; }
 
+  /* --- tombol kembali di halaman Input Barang --- */
+  .back-btn{
+    display:inline-flex; align-items:center; gap:6px; border:none; background:var(--pink-soft);
+    color:var(--pink-deeper); font-weight:800; font-size:.8rem; padding:9px 16px;
+    border-radius:999px; cursor:pointer; margin-bottom:16px; transition:.2s;
+  }
+  .back-btn:hover{ background:var(--pink-deep); color:#fff; }
+
   /* --- Beranda: kategori chips --- */
-  .chip-row{ display:flex; gap:10px; overflow-x:auto; padding-bottom:6px; margin-bottom:18px; }
+  .chip-row{ display:flex; gap:10px; overflow-x:auto; padding-bottom:6px; margin-bottom:20px; }
   .chip{
     flex-shrink:0; padding:8px 18px; border-radius:999px; border:1.5px solid var(--pink-soft);
     background:var(--pink-card); font-size:.82rem; font-weight:800; color:var(--pink-deeper);
     cursor:pointer; transition:.2s;
   }
   .chip.active, .chip:hover{ background:var(--pink-deep); color:#fff; border-color:var(--pink-deep); }
+
+  /* --- Etalase dikelompokkan per kategori saat "Semua" dipilih --- */
+  .category-section{ margin-bottom:30px; }
+  .category-section:last-child{ margin-bottom:0; }
+  .category-section-head{
+    display:flex; align-items:baseline; gap:9px; margin-bottom:13px;
+    padding-bottom:9px; border-bottom:1.5px solid var(--pink-soft);
+  }
+  .category-section-head h3{ font-size:1.02rem; color:var(--plum); }
+  .category-section-head .count{
+    font-size:.7rem; color:#fff; background:var(--pink-mid); font-weight:800;
+    padding:2px 10px; border-radius:999px;
+  }
 
   /* --- Catalog grid: kotak-kotak ala Shopee --- */
   .catalog-grid{
@@ -270,7 +301,40 @@
   .modal-content h2{ font-size:1.25rem; color:var(--plum); }
   .modal-content .price{ font-size:1.2rem; }
   .modal-content .desc{ font-size:.9rem; line-height:1.6; color:#7A4B60; white-space:pre-line; }
-  .status-row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+
+  /* --- Pelacak status pesanan (rapi untuk pembeli & admin) --- */
+  .status-block{
+    background:var(--pink-bg); border-radius:16px; padding:16px 14px 14px;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .status-block-title{
+    font-size:.68rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--pink-mid);
+  }
+  .status-tracker{ display:flex; align-items:flex-start; }
+  .status-tracker .step{
+    flex:1; display:flex; flex-direction:column; align-items:center; text-align:center;
+    position:relative; font-size:.62rem; font-weight:800; color:#C98CA6; gap:6px; padding:0 2px;
+  }
+  .status-tracker .step:not(:last-child)::after{
+    content:""; position:absolute; top:9px; left:calc(50% + 13px); right:calc(-50% + 13px);
+    height:2px; background:var(--pink-soft); z-index:0;
+  }
+  .status-tracker .step.done:not(:last-child)::after{ background:var(--ok); }
+  .status-tracker .step .dot{
+    width:18px; height:18px; border-radius:50%; background:#fff;
+    border:2px solid var(--pink-soft); z-index:1;
+  }
+  .status-tracker .step.done .dot{ background:var(--ok); border-color:var(--ok); }
+  .status-tracker .step.active .dot{ background:var(--pink-deeper); border-color:var(--pink-deeper); box-shadow:0 0 0 3px rgba(196,62,110,.22); }
+  .status-tracker .step.done{ color:var(--ok); }
+  .status-tracker .step.active{ color:var(--pink-deeper); }
+
+  .status-admin-row{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    background:#fff; border:1.5px solid var(--pink-soft); border-radius:12px; padding:10px 12px;
+  }
+  .status-admin-row .status-admin-label{ font-size:.75rem; font-weight:800; color:var(--pink-deeper); }
   select.status-select{
     border-radius:999px; border:1.5px solid var(--pink-soft); padding:7px 14px;
     font-size:.8rem; font-weight:700; background:var(--pink-bg); color:var(--plum);
@@ -309,21 +373,28 @@
   textarea{ min-height:90px; }
 
   .upload-box{
-    border:2px dashed var(--pink-soft); border-radius:14px; padding:18px;
-    display:flex; flex-direction:column; align-items:center; gap:8px;
-    cursor:pointer; text-align:center; background:#FFFAFC; transition:.2s;
-    position:relative; overflow:hidden;
+    border:2px dashed var(--pink-soft); border-radius:14px;
+    text-align:center; background:#FFFAFC; transition:.2s; overflow:hidden;
   }
-  .upload-box:hover{ border-color:var(--pink-deep); background:#FFF0F6; }
-  .upload-box input[type=file]{
-    position:absolute; inset:0; opacity:0; cursor:pointer;
+  .upload-box.filled{ border-style:solid; border-color:var(--pink-deep); }
+  .upload-empty{
+    padding:22px 18px; display:flex; flex-direction:column; align-items:center; gap:8px;
+    cursor:pointer; transition:.2s;
   }
-  .upload-box .icon{ font-size:1.6rem; }
-  .upload-box .hint{ font-size:.78rem; color:var(--pink-deeper); font-weight:700; }
-  .upload-preview{ margin-top:10px; display:none; }
-  .upload-preview.show{ display:block; }
-  .upload-preview img{ max-width:100%; max-height:160px; border-radius:10px; display:block; margin:0 auto; }
-  .upload-preview video{ max-width:100%; max-height:160px; border-radius:10px; display:block; margin:0 auto; }
+  .upload-empty:hover{ background:#FFF0F6; }
+  .upload-empty .icon{ font-size:1.7rem; }
+  .upload-empty .hint{ font-size:.78rem; color:var(--pink-deeper); font-weight:700; }
+  .upload-empty .subhint{ font-size:.68rem; color:#C98CA6; font-weight:600; }
+  .upload-filled{ display:none; flex-direction:column; }
+  .upload-filled.show{ display:flex; }
+  .upload-filled img, .upload-filled video{
+    width:100%; max-height:200px; object-fit:cover; display:block; background:#000;
+  }
+  .upload-change-btn{
+    border:none; background:var(--pink-deeper); color:#fff; font-weight:800; font-size:.78rem;
+    padding:10px; cursor:pointer; transition:background .2s ease;
+  }
+  .upload-change-btn:hover{ background:var(--pink-deep); }
 
   button.save-btn{
     background:var(--pink-deeper); color:#fff;
@@ -335,33 +406,25 @@
   button.save-btn:disabled{ background:#E8B9CB; cursor:not-allowed; transform:none; }
 
   .toast{
-    position:fixed; bottom:96px; left:50%; transform:translateX(-50%) translateY(20px);
+    position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(20px);
     background:var(--pink-deeper); color:#fff; padding:12px 22px; border-radius:999px;
     font-size:.85rem; font-weight:700; box-shadow:0 10px 24px rgba(196,62,110,.3);
     opacity:0; transition:.3s ease; z-index:250; pointer-events:none;
   }
   .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 
-  /* ===== BOTTOM NAV ===== */
-  .bottom-nav{
-    position:fixed; bottom:0; left:0; right:0; z-index:100;
-    background:var(--pink-card); border-top:1px solid var(--pink-soft);
-    display:flex; box-shadow:0 -6px 20px rgba(196,62,110,.14);
+  /* ===== FAB: buka halaman Input Barang (khusus admin) ===== */
+  .fab-admin{
+    position:fixed; right:20px; bottom:24px; z-index:90;
+    display:flex; align-items:center; gap:8px;
+    border:none; border-radius:999px; padding:15px 22px;
+    background:linear-gradient(120deg, var(--pink-deep), var(--pink-deeper));
+    color:#fff; font-family:'Baloo 2', sans-serif; font-weight:700; font-size:.9rem;
+    cursor:pointer; box-shadow:0 14px 30px rgba(196,62,110,.4);
+    transition:transform .2s ease, box-shadow .2s ease;
   }
-  .nav-btn{
-    flex:1; border:none; background:none; padding:10px 6px 12px;
-    display:flex; flex-direction:column; align-items:center; gap:3px;
-    color:#D89BB2; font-size:.7rem; font-weight:800; cursor:pointer;
-    transition:color .2s ease;
-  }
-  .nav-btn svg{ width:22px; height:22px; transition:transform .2s ease; }
-  .nav-btn.active{ color:var(--pink-deeper); }
-  .nav-btn.active svg{ transform:translateY(-2px); }
-  .nav-btn .dot{
-    width:5px; height:5px; border-radius:50%; background:var(--pink-deep);
-    opacity:0; margin-top:1px;
-  }
-  .nav-btn.active .dot{ opacity:1; }
+  .fab-admin:hover{ transform:translateY(-3px); box-shadow:0 18px 36px rgba(196,62,110,.48); }
+  .fab-admin .plus{ font-size:1.15rem; line-height:1; }
 
   footer.note{ text-align:center; color:var(--pink-mid); font-size:.78rem; padding:10px 20px 0; opacity:.85; }
 
@@ -432,6 +495,10 @@
         <div class="tag">Management System</div>
       </div>
       <div class="spacer"></div>
+      <button class="home-btn" onclick="kembaliKeAwal()" title="Kembali ke halaman awal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>
+        <span>Halaman Awal</span>
+      </button>
       <div class="page-title">
         Halaman aktif
         <strong id="activePageLabel">Beranda</strong>
@@ -451,8 +518,9 @@
         <div class="catalog-grid" id="catalogGrid"></div>
       </section>
 
-      <!-- PAGE: INPUT BARANG (KHUSUS ADMIN) -->
+      <!-- PAGE: INPUT BARANG (khusus admin) -->
       <section class="page admin-only" id="page-input">
+        <button class="back-btn" onclick="gantiHalaman('beranda')">← Kembali ke Beranda</button>
         <div class="section-heading">
           <span class="tag">Admin</span>
           <h2>Input Barang Baru</h2>
@@ -486,21 +554,33 @@
             <div class="field">
               <label>Foto Produk (unggah dari perangkat)</label>
               <div class="upload-box" id="fotoBox">
-                <div class="icon">📷</div>
-                <div class="hint">Ketuk untuk pilih foto</div>
-                <input type="file" id="fotoInput" accept="image/*" onchange="previewFoto(event)">
+                <div class="upload-empty" id="fotoEmpty" onclick="document.getElementById('fotoInput').click()">
+                  <div class="icon">📷</div>
+                  <div class="hint">Ketuk untuk pilih foto</div>
+                  <div class="subhint">JPG, PNG, atau WEBP</div>
+                </div>
+                <div class="upload-filled" id="fotoFilled">
+                  <img id="fotoImg" alt="Preview foto produk">
+                  <button type="button" class="upload-change-btn" onclick="document.getElementById('fotoInput').click()">Ganti Foto</button>
+                </div>
+                <input type="file" id="fotoInput" accept="image/*" onchange="previewFoto(event)" style="display:none">
               </div>
-              <div class="upload-preview" id="fotoPreview"></div>
             </div>
 
             <div class="field">
-              <label>Video Produk (unggah dari perangkat)</label>
+              <label>Video Produk (unggah dari perangkat, opsional)</label>
               <div class="upload-box" id="videoBox">
-                <div class="icon">🎬</div>
-                <div class="hint">Ketuk untuk pilih video</div>
-                <input type="file" id="videoInput" accept="video/*" onchange="previewVideo(event)">
+                <div class="upload-empty" id="videoEmpty" onclick="document.getElementById('videoInput').click()">
+                  <div class="icon">🎬</div>
+                  <div class="hint">Ketuk untuk pilih video</div>
+                  <div class="subhint">MP4 atau MOV</div>
+                </div>
+                <div class="upload-filled" id="videoFilled">
+                  <video id="videoPrev" controls></video>
+                  <button type="button" class="upload-change-btn" onclick="document.getElementById('videoInput').click()">Ganti Video</button>
+                </div>
+                <input type="file" id="videoInput" accept="video/*" onchange="previewVideo(event)" style="display:none">
               </div>
-              <div class="upload-preview" id="videoPreview"></div>
             </div>
 
             <button type="submit" class="save-btn" id="btnSimpan">Simpan Produk ke Database</button>
@@ -508,6 +588,11 @@
         </div>
       </section>
     </main>
+
+    <!-- Tombol mengambang untuk admin membuka halaman Input Barang -->
+    <button class="fab-admin admin-only" id="fabInput" onclick="gantiHalaman('input')">
+      <span class="plus">+</span> Tambah Produk
+    </button>
 
     <footer class="note">GADGET STORE — Prototype front-end, tema Pink &amp; Putih</footer>
   </div>
@@ -532,22 +617,6 @@
     </div>
   </div>
 
-  <!-- BOTTOM NAVIGATION -->
-  <nav class="bottom-nav" id="bottomNav">
-    <button class="nav-btn active" data-page="beranda" onclick="gantiHalaman('beranda')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>
-      Beranda
-      <span class="dot"></span>
-    </button>
-
-    <!-- Tombol ini diberi class 'admin-only' agar hanya tampil saat login sebagai Admin -->
-    <button class="nav-btn admin-only" data-page="input" onclick="gantiHalaman('input')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
-      Input Barang
-      <span class="dot"></span>
-    </button>
-  </nav>
-
 <script>
 /* ================= NAVIGASI & PERAN ================= */
 let modeAktif = 'admin';
@@ -558,26 +627,28 @@ function masuk(mode){
   document.getElementById('dashboard').classList.toggle('mode-admin', mode === 'admin');
   document.getElementById('intro').classList.add('hidden');
   document.getElementById('dashboard').classList.add('show');
-  
-  // Selalu arahkan ke beranda saat awal masuk
   gantiHalaman('beranda');
   renderKatalog();
 }
 
+function kembaliKeAwal(){
+  // Tutup modal/konfirmasi yang mungkin masih terbuka sebelum balik ke halaman awal.
+  document.getElementById('modalOverlay').classList.remove('show');
+  document.getElementById('confirmOverlay').classList.remove('show');
+  idxAkanDihapus = null;
+
+  document.getElementById('dashboard').classList.remove('show', 'mode-pembeli', 'mode-admin');
+  document.getElementById('intro').classList.remove('hidden');
+
+  kategoriAktif = "Semua";
+  gantiHalaman('beranda');
+}
+
 function gantiHalaman(page){
-  // Proteksi: Jika mode pembeli mencoba membuka halaman 'input', alihkan ke 'beranda'
-  if(modeAktif === 'pembeli' && page === 'input'){
-    page = 'beranda';
-  }
-
+  // Pembeli tidak boleh membuka halaman Input Barang sama sekali.
+  if(page === 'input' && modeAktif !== 'admin') page = 'beranda';
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const targetPage = document.getElementById('page-' + page);
-  if(targetPage) targetPage.classList.add('active');
-
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  const activeBtn = document.querySelector(`.nav-btn[data-page="${page}"]`);
-  if(activeBtn) activeBtn.classList.add('active');
-
+  document.getElementById('page-' + page).classList.add('active');
   document.getElementById('activePageLabel').textContent = page === 'beranda' ? 'Beranda' : 'Input Barang';
   window.scrollTo({top:0, behavior:'smooth'});
 }
@@ -638,37 +709,70 @@ function renderChips(){
   });
 }
 
+function buatKartuProduk(p){
+  const idx = produkList.indexOf(p);
+  const card = document.createElement('div');
+  card.className = "product-card";
+  card.onclick = () => bukaModal(idx);
+  card.innerHTML = `
+    <div class="thumb-wrap">
+      <img src="${p.img}" alt="${p.nama}">
+      <span class="badge-kategori">${p.kategori}</span>
+      <button class="delete-btn admin-only" title="Hapus produk" onclick="event.stopPropagation(); hapusProduk(${idx})">✕</button>
+      ${p.video ? '<span class="badge-video">▶ Video</span>' : ''}
+    </div>
+    <div class="product-body">
+      <h3>${p.nama}</h3>
+      <div class="price">${p.harga}</div>
+      <span class="stamp ${p.status}">${statusLabel[p.status]}</span>
+    </div>
+  `;
+  return card;
+}
+
 function renderKatalog(){
   const grid = document.getElementById('catalogGrid');
-  const filtered = kategoriAktif === "Semua" ? produkList : produkList.filter(p => p.kategori === kategoriAktif);
-  document.getElementById('jumlahProduk').textContent = filtered.length + " produk";
 
+  if(produkList.length === 0){
+    document.getElementById('jumlahProduk').textContent = "0 produk";
+    grid.className = "";
+    grid.innerHTML = '<div class="empty-state">Belum ada produk.<br>Tambahkan lewat menu "Input Barang".</div>';
+    return;
+  }
+
+  if(kategoriAktif === "Semua"){
+    // Etalase dikelompokkan rapi per kategori supaya mudah dipindai.
+    document.getElementById('jumlahProduk').textContent = produkList.length + " produk";
+    grid.className = "";
+    grid.innerHTML = "";
+    const kategoriUnik = [...new Set(produkList.map(p => p.kategori))];
+    kategoriUnik.forEach(kat => {
+      const items = produkList.filter(p => p.kategori === kat);
+      const section = document.createElement('div');
+      section.className = "category-section";
+      section.innerHTML = `
+        <div class="category-section-head">
+          <h3>${kat}</h3>
+          <span class="count">${items.length} produk</span>
+        </div>
+        <div class="catalog-grid"></div>
+      `;
+      const innerGrid = section.querySelector('.catalog-grid');
+      items.forEach(p => innerGrid.appendChild(buatKartuProduk(p)));
+      grid.appendChild(section);
+    });
+    return;
+  }
+
+  const filtered = produkList.filter(p => p.kategori === kategoriAktif);
+  document.getElementById('jumlahProduk').textContent = filtered.length + " produk";
+  grid.className = "catalog-grid";
+  grid.innerHTML = "";
   if(filtered.length === 0){
     grid.innerHTML = '<div class="empty-state">Belum ada produk di kategori ini.<br>Tambahkan lewat menu "Input Barang".</div>';
     return;
   }
-
-  grid.innerHTML = "";
-  filtered.forEach((p) => {
-    const idx = produkList.indexOf(p);
-    const card = document.createElement('div');
-    card.className = "product-card";
-    card.onclick = () => bukaModal(idx);
-    card.innerHTML = `
-      <div class="thumb-wrap">
-        <img src="${p.img}" alt="${p.nama}">
-        <span class="badge-kategori">${p.kategori}</span>
-        <button class="delete-btn admin-only" title="Hapus produk" onclick="event.stopPropagation(); hapusProduk(${idx})">✕</button>
-        ${p.video ? '<span class="badge-video">▶ Video</span>' : ''}
-      </div>
-      <div class="product-body">
-        <h3>${p.nama}</h3>
-        <div class="price">${p.harga}</div>
-        <span class="stamp ${p.status}">${statusLabel[p.status]}</span>
-      </div>
-    `;
-    grid.appendChild(card);
-  });
+  filtered.forEach(p => grid.appendChild(buatKartuProduk(p)));
 }
 
 /* ================= MODAL DETAIL + CAROUSEL ================= */
@@ -702,14 +806,18 @@ function bukaModal(idx){
       <h2>${p.nama}</h2>
       <div class="price">${p.harga}</div>
       <div class="desc">${p.deskripsi}</div>
-      <div class="status-row">
-        <span class="stamp ${p.status}" id="modalStamp">${statusLabel[p.status]}</span>
-        <select class="status-select admin-only" onchange="ubahStatus(${idx}, this.value)">
-          <option value="belum" ${p.status==='belum'?'selected':''}>Belum Dibayar</option>
-          <option value="diproses" ${p.status==='diproses'?'selected':''}>Diproses</option>
-          <option value="dikirim" ${p.status==='dikirim'?'selected':''}>Dikirim</option>
-          <option value="selesai" ${p.status==='selesai'?'selected':''}>Selesai</option>
-        </select>
+      <div class="status-block">
+        <div class="status-block-title">Status Pesanan</div>
+        <div class="status-tracker" id="statusTracker">${buildStatusTracker(p.status)}</div>
+        <div class="status-admin-row admin-only">
+          <span class="status-admin-label">Ubah status pesanan</span>
+          <select class="status-select" onchange="ubahStatus(${idx}, this.value)">
+            <option value="belum" ${p.status==='belum'?'selected':''}>Belum Dibayar</option>
+            <option value="diproses" ${p.status==='diproses'?'selected':''}>Diproses</option>
+            <option value="dikirim" ${p.status==='dikirim'?'selected':''}>Dikirim</option>
+            <option value="selesai" ${p.status==='selesai'?'selected':''}>Selesai</option>
+          </select>
+        </div>
       </div>
       <button class="buy-btn" onclick="beliSekarang(${idx})">Beli Sekarang</button>
       <button class="danger-btn admin-only" onclick="hapusProduk(${idx})">Hapus Produk</button>
@@ -742,16 +850,30 @@ function pilihSlide(i){
 function tutupModal(){ document.getElementById('modalOverlay').classList.remove('show'); }
 function tutupModalJikaLuar(e){ if(e.target.id === 'modalOverlay') tutupModal(); }
 
+const urutanStatus = ['belum', 'diproses', 'dikirim', 'selesai'];
+
+function buildStatusTracker(status){
+  const currentIdx = urutanStatus.indexOf(status);
+  return urutanStatus.map((s, i) => {
+    let cls = 'step';
+    if(i < currentIdx) cls += ' done';
+    else if(i === currentIdx) cls += ' active';
+    return `<div class="${cls}"><span class="dot"></span><span>${statusLabel[s]}</span></div>`;
+  }).join('');
+}
+
 function ubahStatus(idx, value){
   produkList[idx].status = value;
-  document.getElementById('modalStamp').textContent = statusLabel[value];
-  document.getElementById('modalStamp').className = "stamp " + value;
+  const tracker = document.getElementById('statusTracker');
+  if(tracker) tracker.innerHTML = buildStatusTracker(value);
   renderKatalog();
 }
 
 let idxAkanDihapus = null;
 
 function hapusProduk(idx){
+  // Pengaman tambahan: hanya admin yang boleh memicu penghapusan produk.
+  if(modeAktif !== 'admin') return;
   const p = produkList[idx];
   if(!p) return;
   idxAkanDihapus = idx;
@@ -789,31 +911,44 @@ let videoTerpilih = null;
 function previewFoto(e){
   const file = e.target.files[0];
   if(!file) return;
+  if(!file.type.startsWith('image/')){
+    tampilkanToast("File yang dipilih bukan gambar.");
+    return;
+  }
   const reader = new FileReader();
   reader.onload = () => {
     fotoTerpilih = reader.result;
-    const preview = document.getElementById('fotoPreview');
-    preview.innerHTML = `<img src="${fotoTerpilih}" alt="Preview foto">`;
-    preview.classList.add('show');
+    document.getElementById('fotoImg').src = fotoTerpilih;
+    document.getElementById('fotoEmpty').style.display = 'none';
+    document.getElementById('fotoFilled').classList.add('show');
+    document.getElementById('fotoBox').classList.add('filled');
   };
+  reader.onerror = () => tampilkanToast("Gagal membaca file foto, coba lagi.");
   reader.readAsDataURL(file);
 }
 
 function previewVideo(e){
   const file = e.target.files[0];
   if(!file) return;
+  if(!file.type.startsWith('video/')){
+    tampilkanToast("File yang dipilih bukan video.");
+    return;
+  }
   const reader = new FileReader();
   reader.onload = () => {
     videoTerpilih = reader.result;
-    const preview = document.getElementById('videoPreview');
-    preview.innerHTML = `<video src="${videoTerpilih}" controls></video>`;
-    preview.classList.add('show');
+    document.getElementById('videoPrev').src = videoTerpilih;
+    document.getElementById('videoEmpty').style.display = 'none';
+    document.getElementById('videoFilled').classList.add('show');
+    document.getElementById('videoBox').classList.add('filled');
   };
+  reader.onerror = () => tampilkanToast("Gagal membaca file video, coba lagi.");
   reader.readAsDataURL(file);
 }
 
 function simpanProduk(e){
   e.preventDefault();
+  if(modeAktif !== 'admin') return;
   const nama = document.getElementById('namaProduk').value.trim();
   const kategori = document.getElementById('kategoriProduk').value;
   const harga = document.getElementById('hargaProduk').value.trim();
@@ -832,10 +967,14 @@ function simpanProduk(e){
   });
 
   e.target.reset();
-  document.getElementById('fotoPreview').innerHTML = "";
-  document.getElementById('fotoPreview').classList.remove('show');
-  document.getElementById('videoPreview').innerHTML = "";
-  document.getElementById('videoPreview').classList.remove('show');
+  document.getElementById('fotoImg').src = "";
+  document.getElementById('fotoEmpty').style.display = 'flex';
+  document.getElementById('fotoFilled').classList.remove('show');
+  document.getElementById('fotoBox').classList.remove('filled');
+  document.getElementById('videoPrev').src = "";
+  document.getElementById('videoEmpty').style.display = 'flex';
+  document.getElementById('videoFilled').classList.remove('show');
+  document.getElementById('videoBox').classList.remove('filled');
   fotoTerpilih = null;
   videoTerpilih = null;
 
