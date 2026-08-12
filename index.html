@@ -19,6 +19,7 @@
     --ok: #4F9D6E;
     --wait: #E8A23B;
     --ship: #6E8FE8;
+    --done: #C43E6E;
   }
   *{box-sizing:border-box;}
   html,body{height:100%;}
@@ -32,7 +33,7 @@
   h1,h2,h3{ font-family:'Baloo 2', sans-serif; margin:0; }
   button{ font-family:inherit; }
 
-  /* ===== INTRO ===== */
+  /* ===== INTRO / PILIH PERAN ===== */
   #intro{
     position:fixed; inset:0; overflow-y:auto;
     background:
@@ -48,9 +49,13 @@
     padding:38px 30px 32px; text-align:center;
     box-shadow:0 30px 60px rgba(90,18,56,.4);
   }
-  .intro-wordmark{ display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:18px; }
+  .intro-wordmark{
+    display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:18px;
+  }
   .intro-wordmark .emoji{ font-size:2.1rem; }
-  .intro-wordmark h1{ font-size:1.9rem; font-weight:800; color:var(--plum); }
+  .intro-wordmark h1{
+    font-size:1.9rem; font-weight:800; letter-spacing:.01em; color:var(--plum);
+  }
   .intro-wordmark h1 span{ color:var(--pink-deeper); }
   .intro-card > p{ color:#8A5468; font-size:.95rem; line-height:1.55; max-width:300px; margin:0 auto 28px; }
 
@@ -58,55 +63,101 @@
     display:flex; align-items:center; gap:16px; width:100%;
     border:none; border-radius:18px; padding:18px 20px; cursor:pointer;
     text-align:left; font-family:'Baloo 2', sans-serif; font-weight:700; font-size:1.05rem;
-    color:#fff; box-shadow:0 12px 26px rgba(90,18,56,.22); transition:.2s ease;
+    color:#fff; box-shadow:0 12px 26px rgba(90,18,56,.22);
+    transition:transform .2s ease, box-shadow .2s ease;
   }
-  .role-btn:hover{ transform:translateY(-2px); }
+  .role-btn:hover{ transform:translateY(-2px); box-shadow:0 16px 32px rgba(90,18,56,.3); }
   .role-btn .role-icon{
     width:44px; height:44px; border-radius:14px; background:rgba(255,255,255,.22);
     display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0;
   }
   .role-btn .role-text{ display:block; flex:1; }
-  .role-btn .role-text small{ display:block; font-family:'Nunito',sans-serif; font-weight:600; font-size:.72rem; color:rgba(255,255,255,.85); }
+  .role-btn .role-text small{
+    display:block; font-family:'Nunito',sans-serif; font-weight:600; font-size:.72rem;
+    color:rgba(255,255,255,.85); text-transform:none; letter-spacing:0; margin-top:2px;
+  }
   .role-btn.pembeli{ background:linear-gradient(120deg, var(--pink-deep), var(--pink-deeper)); }
   .role-btn.admin{ background:linear-gradient(120deg, #7A1E4A, #4E1030); }
 
-  .role-divider{ display:flex; align-items:center; gap:12px; margin:18px 0; color:#C98CA6; font-size:.85rem; font-weight:700; }
-  .role-divider::before, .role-divider::after{ content:""; flex:1; height:1px; background:var(--pink-soft); }
+  .role-divider{
+    display:flex; align-items:center; gap:12px; margin:18px 0;
+    color:#C98CA6; font-size:.85rem; font-weight:700;
+  }
+  .role-divider::before, .role-divider::after{
+    content:""; flex:1; height:1px; background:var(--pink-soft);
+  }
 
-  /* ===== DASHBOARD ===== */
+  .role-info{
+    background:var(--pink-soft); color:var(--plum); border-radius:14px;
+    padding:12px 16px; font-size:.78rem; line-height:1.5; font-weight:600; margin-top:22px;
+  }
+
+  /* ===== DASHBOARD SHELL ===== */
   #dashboard{ display:none; }
   #dashboard.show{ display:block; animation:fadeUp .5s ease; }
   @keyframes fadeUp{ from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);} }
 
   header.top{
     position:sticky; top:0; z-index:50;
-    background:linear-gradient(120deg, var(--pink-deep), var(--pink-deeper) 85%);
-    color:#fff; padding:14px 20px; display:flex; align-items:center; gap:14px;
+    background:
+      radial-gradient(circle at 10% -30%, rgba(255,255,255,.5), transparent 55%),
+      linear-gradient(120deg, var(--pink-deep), var(--pink-deeper) 85%);
+    color:#fff;
+    padding:14px 20px;
+    display:flex; align-items:center; gap:14px;
+    position:relative;
     box-shadow:0 8px 22px rgba(196,62,110,.25);
   }
+  header.top::after{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:3px;
+    background:linear-gradient(90deg, transparent, #fff 20%, #FFD9E7 50%, #fff 80%, transparent);
+    opacity:.7;
+  }
   header.top .logo-mini{
-    width:46px; height:46px; border-radius:14px; background:#fff;
+    width:46px; height:46px; border-radius:14px; flex-shrink:0;
+    background:#fff;
     display:flex; align-items:center; justify-content:center;
+    box-shadow:0 6px 14px rgba(0,0,0,.15);
   }
   header.top .logo-mini svg{ width:24px; height:24px; }
   header.top .brand-text{ line-height:1.2; }
-  header.top .brand-text .name{ font-size:1.3rem; font-weight:800; }
+  header.top .brand-text .name{ font-size:1.3rem; font-weight:800; letter-spacing:.02em; }
   header.top .brand-text .tag{ font-size:.66rem; color:#FFE1EC; letter-spacing:.14em; font-weight:700; text-transform:uppercase;}
   header.top .spacer{ flex:1; }
+  header.top .page-title{
+    text-align:right; font-size:.64rem; color:#FFE1EC;
+    letter-spacing:.1em; text-transform:uppercase; font-weight:700;
+  }
+  header.top .page-title strong{
+    display:inline-block; margin-top:3px; font-family:'Baloo 2',sans-serif; font-size:.9rem;
+    font-weight:700; color:var(--pink-deeper); background:#fff;
+    padding:4px 12px; border-radius:999px; letter-spacing:0; text-transform:none;
+  }
+  @media(max-width:420px){ header.top .page-title{ display:none; } }
 
   .home-btn{
-    display:flex; align-items:center; gap:6px; border:1.5px solid rgba(255,255,255,.5);
-    background:rgba(255,255,255,.16); color:#fff; font-weight:800; font-size:.72rem;
+    flex-shrink:0; display:flex; align-items:center; gap:6px;
+    border:1.5px solid rgba(255,255,255,.5); background:rgba(255,255,255,.16);
+    color:#fff; font-weight:800; font-size:.72rem; letter-spacing:.02em;
     padding:8px 13px; border-radius:999px; cursor:pointer; transition:.2s;
   }
   .home-btn:hover{ background:rgba(255,255,255,.32); }
+  .home-btn svg{ width:15px; height:15px; }
+  @media(max-width:380px){ .home-btn span{ display:none; } }
 
   main{ max-width:1180px; margin:0 auto; padding:26px 18px 40px; }
+
   .page{ display:none; }
   .page.active{ display:block; animation:fadeUp .35s ease; }
 
-  .section-heading{ display:flex; align-items:baseline; gap:12px; margin-bottom:6px; }
-  .section-heading .tag{ background:var(--pink-deeper); color:#fff; font-size:.66rem; font-weight:800; padding:5px 12px; border-radius:999px; text-transform:uppercase; }
+  .section-heading{
+    display:flex; align-items:baseline; gap:12px; margin-bottom:6px;
+  }
+  .section-heading .tag{
+    background:var(--pink-deeper); color:#fff;
+    font-size:.66rem; font-weight:800; letter-spacing:.12em;
+    padding:5px 12px; border-radius:999px; text-transform:uppercase;
+  }
   .section-heading h2{ font-size:1.45rem; color:var(--pink-deeper); }
   .section-heading .sub{ color:var(--pink-mid); font-size:.82rem; margin-left:auto; font-weight:700; }
   .lead-text{ margin:8px 0 18px; color:#8A5468; font-size:.85rem; max-width:520px; }
@@ -121,75 +172,307 @@
   .chip-row{ display:flex; gap:10px; overflow-x:auto; padding-bottom:6px; margin-bottom:20px; }
   .chip{
     flex-shrink:0; padding:8px 18px; border-radius:999px; border:1.5px solid var(--pink-soft);
-    background:var(--pink-card); font-size:.82rem; font-weight:800; color:var(--pink-deeper); cursor:pointer; transition:.2s;
+    background:var(--pink-card); font-size:.82rem; font-weight:800; color:var(--pink-deeper);
+    cursor:pointer; transition:.2s;
   }
   .chip.active, .chip:hover{ background:var(--pink-deep); color:#fff; border-color:var(--pink-deep); }
 
   .category-section{ margin-bottom:30px; }
-  .category-section-head{ display:flex; align-items:baseline; gap:9px; margin-bottom:13px; padding-bottom:9px; border-bottom:1.5px solid var(--pink-soft); }
+  .category-section:last-child{ margin-bottom:0; }
+  .category-section-head{
+    display:flex; align-items:baseline; gap:9px; margin-bottom:13px;
+    padding-bottom:9px; border-bottom:1.5px solid var(--pink-soft);
+  }
   .category-section-head h3{ font-size:1.02rem; color:var(--plum); }
-  .category-section-head .count{ font-size:.7rem; color:#fff; background:var(--pink-mid); font-weight:800; padding:2px 10px; border-radius:999px; }
+  .category-section-head .count{
+    font-size:.7rem; color:#fff; background:var(--pink-mid); font-weight:800;
+    padding:2px 10px; border-radius:999px;
+  }
 
-  .catalog-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:14px; }
-  @media(min-width:900px){ .catalog-grid{ grid-template-columns:repeat(4, 1fr); } }
-
+  .catalog-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr));
+    gap:14px;
+  }
+  @media(min-width:900px){
+    .catalog-grid{ grid-template-columns:repeat(4, 1fr); }
+  }
   .product-card{
     background:var(--pink-card); border:1px solid var(--pink-soft); border-radius:16px;
     overflow:hidden; display:flex; flex-direction:column; cursor:pointer;
-    box-shadow:0 6px 16px rgba(196,62,110,.1); transition:transform .2s ease, box-shadow .2s ease; position:relative;
+    box-shadow:0 6px 16px rgba(196,62,110,.1);
+    transition:transform .2s ease, box-shadow .2s ease;
+    position:relative;
   }
   .product-card:hover{ transform:translateY(-4px); box-shadow:0 14px 26px rgba(196,62,110,.2); }
   .product-card .thumb-wrap{ position:relative; aspect-ratio:1/1; overflow:hidden; background:var(--pink-soft); }
   .product-card img{ width:100%; height:100%; object-fit:cover; display:block; }
-  .badge-video{ position:absolute; bottom:8px; right:8px; background:rgba(90,35,64,.82); color:#fff; font-size:.62rem; font-weight:800; padding:3px 8px; border-radius:999px; }
-  .badge-kategori{ position:absolute; top:8px; left:8px; background:rgba(255,255,255,.94); color:var(--pink-deeper); font-size:.6rem; font-weight:800; padding:3px 9px; border-radius:999px; text-transform:uppercase; }
-  .delete-btn{
-    position:absolute; top:6px; right:6px; width:26px; height:26px; border-radius:50%; border:none;
-    background:rgba(90,35,64,.75); color:#fff; font-size:.85rem; display:flex; align-items:center; justify-content:center;
-    cursor:pointer; opacity:0; transition:.2s;
+  .badge-video{
+    position:absolute; bottom:8px; right:8px; background:rgba(90,35,64,.82);
+    color:#fff; font-size:.62rem; font-weight:800; padding:3px 8px; border-radius:999px;
+    display:flex; align-items:center; gap:4px;
   }
-  .product-card:hover .delete-btn{ opacity:1; }
+  .badge-kategori{
+    position:absolute; top:8px; left:8px; background:rgba(255,255,255,.94);
+    color:var(--pink-deeper); font-size:.6rem; font-weight:800; padding:3px 9px;
+    border-radius:999px; text-transform:uppercase; letter-spacing:.04em;
+  }
+  .delete-btn{
+    position:absolute; top:6px; right:6px; width:26px; height:26px; border-radius:50%;
+    border:none; background:rgba(90,35,64,.75); color:#fff; font-size:.85rem;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+    opacity:0; transition:opacity .2s ease, background .2s ease;
+  }
+  .product-card:hover .delete-btn, .product-card:focus-within .delete-btn{ opacity:1; }
   .delete-btn:hover{ background:#B23A2E; }
-
   .product-body{ padding:10px 11px 12px; display:flex; flex-direction:column; gap:5px; flex:1; }
-  .product-body h3{ font-size:.86rem; color:var(--plum); font-weight:700; margin:0; }
+  .product-body h3{ font-size:.86rem; color:var(--plum); font-weight:700; line-height:1.3;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
   .price{ font-weight:800; color:var(--pink-deeper); font-size:.95rem; }
-  .stamp{ align-self:flex-start; padding:2px 9px; border-radius:999px; font-size:.6rem; font-weight:800; text-transform:uppercase; color:#fff; }
+  .stamp{
+    align-self:flex-start; padding:2px 9px; border-radius:999px; font-size:.6rem;
+    font-weight:800; text-transform:uppercase; letter-spacing:.03em; color:#fff;
+  }
   .stamp.belum{ background:var(--wait); }
   .stamp.diproses{ background:var(--ship); }
+  .stamp.dikirim{ background:var(--pink-mid); }
   .stamp.selesai{ background:var(--ok); }
 
-  .card{ background:var(--pink-card); border-radius:20px; box-shadow:0 14px 32px rgba(196,62,110,.12); border:1px solid var(--pink-soft); padding:26px 24px; }
+  .empty-state{
+    text-align:center; padding:50px 20px; color:var(--pink-deeper); font-weight:800;
+    border:2px dashed var(--pink-soft); border-radius:16px; background:var(--pink-card);
+  }
+
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(90,35,64,.45); z-index:150;
+    display:none; align-items:flex-end; justify-content:center;
+  }
+  .modal-overlay.show{ display:flex; }
+  .modal-box{
+    position:relative;
+    background:var(--pink-card); width:100%; max-width:520px; max-height:88vh; overflow-y:auto;
+    border-radius:24px 24px 0 0; padding:0; animation:slideUp .3s ease;
+  }
+  @media(min-width:640px){
+    .modal-overlay{ align-items:center; }
+    .modal-box{ border-radius:20px; }
+  }
+  @keyframes slideUp{ from{ transform:translateY(40px); opacity:0;} to{transform:translateY(0); opacity:1;} }
+  
+  .modal-close{
+    position:absolute; top:12px; right:12px;
+    width:34px; height:34px; border-radius:50%; border:none;
+    background:rgba(0,0,0,.5); color:#fff; font-size:1rem; cursor:pointer; z-index:20;
+    display:flex; align-items:center; justify-content:center;
+    transition:background .2s;
+  }
+  .modal-close:hover{ background:rgba(0,0,0,.8); }
+
+  .carousel{ position:relative; background:#000; overflow:hidden; }
+  .carousel-track{
+    display:flex; transition:transform .35s ease;
+    cursor:grab; touch-action:pan-y; user-select:none; -webkit-user-select:none;
+  }
+  .carousel-track:active{ cursor:grabbing; }
+  .carousel-slide{ flex:0 0 100%; width:100%; height:260px; }
+  .carousel-slide img{ width:100%; height:100%; object-fit:cover; display:block; background:#000; pointer-events:none; }
+
+  .video-wrap{ position:relative; width:100%; height:100%; background:#000; }
+  .video-wrap video{ width:100%; height:100%; object-fit:contain; display:block; background:#000; }
+  .video-tap-layer{ position:absolute; inset:0; z-index:2; cursor:pointer; background:transparent; border:none; padding:0; }
+  .video-play-btn{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%) scale(1);
+    width:54px; height:54px; border-radius:50%; border:none;
+    background:rgba(255,255,255,.94); color:var(--pink-deeper);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; z-index:3; box-shadow:0 10px 22px rgba(0,0,0,.3);
+    transition:opacity .2s ease, transform .2s ease;
+  }
+  .video-play-btn svg{ width:22px; height:22px; margin-left:3px; }
+  .video-play-btn.hide{ opacity:0; transform:translate(-50%,-50%) scale(.8); pointer-events:none; }
+  .video-mute-btn{
+    position:absolute; right:10px; bottom:10px; z-index:3;
+    width:30px; height:30px; border-radius:50%; border:none;
+    background:rgba(0,0,0,.5); color:#fff; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; font-size:.85rem;
+  }
+  .video-progress{
+    position:absolute; left:0; right:0; bottom:0; height:3px; z-index:3;
+    background:rgba(255,255,255,.28);
+  }
+  .video-progress-fill{ height:100%; width:0%; background:var(--pink-mid); }
+
+  .carousel-arrow{
+    position:absolute; top:50%; transform:translateY(-50%); z-index:5;
+    width:34px; height:34px; border-radius:50%; border:none; cursor:pointer;
+    background:rgba(255,255,255,.85); color:var(--pink-deeper); font-size:1.2rem; font-weight:800;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .carousel-arrow.left{ left:10px; }
+  .carousel-arrow.right{ right:10px; }
+  .carousel-dots{
+    position:absolute; bottom:10px; left:0; right:0;
+    display:flex; justify-content:center; gap:7px; z-index:5;
+  }
+  .carousel-dots .dot{
+    width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,.55); cursor:pointer;
+    transition:background .2s ease, transform .2s ease;
+  }
+  .carousel-dots .dot.active{ background:#fff; transform:scale(1.3); }
+  .carousel-label{
+    position:absolute; top:10px; left:10px; z-index:5;
+    background:rgba(90,35,64,.75); color:#fff; font-size:.62rem; font-weight:800;
+    padding:3px 9px; border-radius:999px; text-transform:uppercase; letter-spacing:.04em;
+  }
+
+  .modal-content{ padding:20px 22px 28px; display:flex; flex-direction:column; gap:12px; }
+  .modal-content h2{ font-size:1.25rem; color:var(--plum); }
+  .modal-content .price{ font-size:1.2rem; }
+  .modal-content .desc{ font-size:.9rem; line-height:1.6; color:#7A4B60; white-space:pre-line; }
+
+  .status-block{
+    background:var(--pink-bg); border-radius:16px; padding:16px 14px 14px;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .status-block-title{
+    font-size:.68rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--pink-mid);
+  }
+  .status-tracker{ display:flex; align-items:flex-start; }
+  .status-tracker .step{
+    flex:1; display:flex; flex-direction:column; align-items:center; text-align:center;
+    position:relative; font-size:.62rem; font-weight:800; color:#C98CA6; gap:6px; padding:0 2px;
+  }
+  .status-tracker .step:not(:last-child)::after{
+    content:""; position:absolute; top:9px; left:calc(50% + 13px); right:calc(-50% + 13px);
+    height:2px; background:var(--pink-soft); z-index:0;
+  }
+  .status-tracker .step.done:not(:last-child)::after{ background:var(--ok); }
+  .status-tracker .step .dot{
+    width:18px; height:18px; border-radius:50%; background:#fff;
+    border:2px solid var(--pink-soft); z-index:1;
+  }
+  .status-tracker .step.done .dot{ background:var(--ok); border-color:var(--ok); }
+  .status-tracker .step.active .dot{ background:var(--pink-deeper); border-color:var(--pink-deeper); box-shadow:0 0 0 3px rgba(196,62,110,.22); }
+  .status-tracker .step.done{ color:var(--ok); }
+  .status-tracker .step.active{ color:var(--pink-deeper); }
+
+  .status-admin-row{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    background:#fff; border:1.5px solid var(--pink-soft); border-radius:12px; padding:10px 12px;
+  }
+  .status-admin-row .status-admin-label{ font-size:.75rem; font-weight:800; color:var(--pink-deeper); }
+  select.status-select{
+    border-radius:999px; border:1.5px solid var(--pink-soft); padding:7px 14px;
+    font-size:.8rem; font-weight:700; background:var(--pink-bg); color:var(--plum);
+  }
+  .buy-btn{
+    display:block; text-align:center; border:none; width:100%;
+    background:var(--pink-deep); color:#fff;
+    font-weight:800; padding:13px; border-radius:12px; font-size:.95rem;
+    cursor:pointer; transition:background .2s ease; margin-top:6px;
+  }
+  .buy-btn:hover{ background:var(--pink-deeper); }
+  .danger-btn{
+    display:block; text-align:center; border:1.5px solid #C4534A; width:100%;
+    background:transparent; color:#B23A2E;
+    font-weight:800; padding:11px; border-radius:12px; font-size:.9rem;
+    cursor:pointer; transition:background .2s ease, color .2s ease; margin-top:2px;
+  }
+  .danger-btn:hover{ background:#B23A2E; color:#fff; }
+
+  .card{
+    background:var(--pink-card); border-radius:20px; box-shadow:0 14px 32px rgba(196,62,110,.12);
+    border:1px solid var(--pink-soft); padding:26px 24px;
+  }
   form.product-form{ display:flex; flex-direction:column; gap:18px; }
   .field{ display:flex; flex-direction:column; gap:6px; }
   label{ font-size:.82rem; font-weight:800; color:var(--pink-deeper); }
-  input[type=text], textarea, select{
-    border:1.5px solid var(--pink-soft); background:#FFFAFC; border-radius:10px; padding:11px 14px; font-family:inherit; font-size:.95rem; color:var(--ink);
+  input[type=text], textarea, select.cat-select{
+    border:1.5px solid var(--pink-soft); background:#FFFAFC;
+    border-radius:10px; padding:11px 14px; font-family:inherit; font-size:.95rem;
+    color:var(--ink); resize:vertical;
   }
+  input[type=text]:focus, textarea:focus{
+    outline:none; border-color:var(--pink-deep); box-shadow:0 0 0 3px rgba(255,158,193,.3);
+  }
+  textarea{ min-height:90px; }
 
-  button.save-btn{ background:var(--pink-deeper); color:#fff; border:none; padding:15px 30px; border-radius:12px; font-weight:800; cursor:pointer; transition:.2s; }
-  button.save-btn:hover{ background:var(--pink-deep); }
-  button.export-btn{ background:var(--plum); color:#fff; border:none; padding:12px 20px; border-radius:12px; font-weight:800; cursor:pointer; margin-top:10px; }
+  .upload-box{
+    border:2px dashed var(--pink-soft); border-radius:14px;
+    text-align:center; background:#FFFAFC; transition:.2s; overflow:hidden;
+  }
+  .upload-box.filled{ border-style:solid; border-color:var(--pink-deep); }
+  .upload-empty{
+    padding:22px 18px; display:flex; flex-direction:column; align-items:center; gap:8px;
+    cursor:pointer; transition:.2s;
+  }
+  .upload-empty:hover{ background:#FFF0F6; }
+  .upload-empty .icon{ font-size:1.7rem; }
+  .upload-empty .hint{ font-size:.78rem; color:var(--pink-deeper); font-weight:700; }
+  .upload-empty .subhint{ font-size:.68rem; color:#C98CA6; font-weight:600; }
+  .upload-filled{ display:none; flex-direction:column; }
+  .upload-filled.show{ display:flex; }
+  .upload-filled img, .upload-filled video{
+    width:100%; max-height:200px; object-fit:cover; display:block; background:#000;
+  }
+  .upload-change-btn{
+    border:none; background:var(--pink-deeper); color:#fff; font-weight:800; font-size:.78rem;
+    padding:10px; cursor:pointer; transition:background .2s ease;
+  }
+  .upload-change-btn:hover{ background:var(--pink-deep); }
 
-  /* ===== MODAL & CAROUSEL ===== */
-  .modal-overlay{ position:fixed; inset:0; background:rgba(90,35,64,.45); z-index:150; display:none; align-items:center; justify-content:center; }
-  .modal-overlay.show{ display:flex; }
-  .modal-box{ background:var(--pink-card); width:100%; max-width:480px; border-radius:20px; overflow:hidden; position:relative; }
-  .modal-close{ position:absolute; top:12px; right:12px; width:30px; height:30px; border-radius:50%; border:none; background:rgba(0,0,0,.5); color:#fff; cursor:pointer; z-index:10; }
+  button.save-btn{
+    background:var(--pink-deeper); color:#fff;
+    border:none; padding:15px 30px; border-radius:12px;
+    font-weight:800; font-size:.95rem; letter-spacing:.02em; cursor:pointer;
+    transition:background .2s ease, transform .2s ease;
+  }
+  button.save-btn:hover{ background:var(--pink-deep); transform:translateY(-2px); }
 
-  .carousel-media{ width:100%; height:260px; background:#000; display:flex; align-items:center; justify-content:center; }
-  .carousel-media img, .carousel-media video{ width:100%; height:100%; object-fit:contain; }
-  .modal-content{ padding:20px; display:flex; flex-direction:column; gap:10px; }
+  .toast{
+    position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--pink-deeper); color:#fff; padding:12px 22px; border-radius:999px;
+    font-size:.85rem; font-weight:700; box-shadow:0 10px 24px rgba(196,62,110,.3);
+    opacity:0; transition:.3s ease; z-index:250; pointer-events:none;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 
   .fab-admin{
-    position:fixed; right:20px; bottom:24px; z-index:90; display:flex; align-items:center; gap:8px;
-    border:none; border-radius:999px; padding:15px 22px; background:linear-gradient(120deg, var(--pink-deep), var(--pink-deeper));
-    color:#fff; font-family:'Baloo 2', sans-serif; font-weight:700; font-size:.9rem; cursor:pointer; box-shadow:0 14px 30px rgba(196,62,110,.4);
+    position:fixed; right:20px; bottom:24px; z-index:90;
+    display:flex; align-items:center; gap:8px;
+    border:none; border-radius:999px; padding:15px 22px;
+    background:linear-gradient(120deg, var(--pink-deep), var(--pink-deeper));
+    color:#fff; font-family:'Baloo 2', sans-serif; font-weight:700; font-size:.9rem;
+    cursor:pointer; box-shadow:0 14px 30px rgba(196,62,110,.4);
+    transition:transform .2s ease, box-shadow .2s ease;
   }
+  .fab-admin:hover{ transform:translateY(-3px); box-shadow:0 18px 36px rgba(196,62,110,.48); }
+  .fab-admin .plus{ font-size:1.15rem; line-height:1; }
+
+  footer.note{ text-align:center; color:var(--pink-mid); font-size:.78rem; padding:10px 20px 0; opacity:.85; }
 
   #dashboard.mode-pembeli .admin-only{ display:none !important; }
-  .toast{ position:fixed; bottom:26px; left:50%; transform:translateX(-50%); background:var(--pink-deeper); color:#fff; padding:12px 22px; border-radius:999px; font-weight:700; opacity:0; transition:.3s; z-index:300; pointer-events:none; }
-  .toast.show{ opacity:1; }
+
+  .confirm-overlay{
+    position:fixed; inset:0; background:rgba(90,35,64,.5); z-index:250;
+    display:none; align-items:center; justify-content:center; padding:20px;
+  }
+  .confirm-overlay.show{ display:flex; }
+  .confirm-box{
+    background:#fff; border-radius:20px; padding:26px 24px; max-width:340px; width:100%;
+    text-align:center; box-shadow:0 20px 48px rgba(90,35,64,.3); animation:fadeUp .25s ease;
+  }
+  .confirm-box .icon{ font-size:2rem; margin-bottom:8px; }
+  .confirm-box h3{ font-size:1.05rem; color:var(--plum); margin-bottom:8px; }
+  .confirm-box p{ font-size:.85rem; color:#8A5468; line-height:1.5; margin:0 0 20px; }
+  .confirm-actions{ display:flex; gap:10px; }
+  .confirm-actions button{
+    flex:1; border-radius:10px; padding:11px; font-weight:800; font-size:.88rem; cursor:pointer; border:none;
+  }
+  .confirm-cancel{ background:var(--pink-bg); color:var(--plum); }
+  .confirm-cancel:hover{ background:var(--pink-soft); }
+  .confirm-delete{ background:#B23A2E; color:#fff; }
+  .confirm-delete:hover{ background:#932E24; }
 </style>
 </head>
 <body>
@@ -214,6 +497,8 @@
         <span class="role-icon">🗄️</span>
         <span class="role-text">Masuk sebagai Penjual (Admin)<small>Kelola stok &amp; pesanan</small></span>
       </button>
+
+      <div class="role-info">Pembeli → belanja produk &nbsp;·&nbsp; Penjual → kelola toko &amp; input barang</div>
     </div>
   </section>
 
@@ -228,160 +513,193 @@
       </div>
       <div class="brand-text">
         <div class="name">GADGET STORE</div>
-        <div class="tag">Local Media Mode</div>
+        <div class="tag">Management System</div>
       </div>
       <div class="spacer"></div>
-      <button class="home-btn" onclick="kembaliKeAwal()">Halaman Awal</button>
+      <button class="home-btn" onclick="kembaliKeAwal()" title="Kembali ke halaman awal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>
+        <span>Halaman Awal</span>
+      </button>
+      <div class="page-title">
+        Halaman aktif
+        <strong id="activePageLabel">Beranda</strong>
+      </div>
     </header>
 
     <main>
-      <!-- PAGE BERANDA -->
       <section class="page active" id="page-beranda">
         <div class="section-heading">
-          <span class="tag">Katalog</span>
-          <h2>Daftar Produk</h2>
+          <span class="tag">Pembeli</span>
+          <h2>Etalase Produk</h2>
           <span class="sub" id="jumlahProduk">0 produk</span>
         </div>
-        <p class="lead-text">Foto &amp; video dimuat dari folder <code>assets/</code> di repositori proyekmu.</p>
+        <p class="lead-text">Pilih kategori, ketuk produk untuk lihat foto &amp; video, lalu pantau statusnya sampai selesai.</p>
         <div class="chip-row" id="chipRow"></div>
-        <div id="catalogGrid"></div>
+        <div class="catalog-grid" id="catalogGrid"></div>
       </section>
 
-      <!-- PAGE INPUT (ADMIN) -->
       <section class="page admin-only" id="page-input">
         <button class="back-btn" onclick="gantiHalaman('beranda')">← Kembali ke Beranda</button>
         <div class="section-heading">
           <span class="tag">Admin</span>
-          <h2>Tambah Produk Baru</h2>
+          <h2>Input Barang Baru</h2>
+          <span class="sub">Unggah langsung dari perangkatmu</span>
         </div>
-        <p class="lead-text">Pastikan file foto &amp; video sudah ditaruh di folder <code>assets/</code> sebelum menginputkan nama filenya.</p>
-        
+        <p class="lead-text">Isi foto dan video produk dari galeri HP-mu, data otomatis tersimpan di perangkat.</p>
         <div class="card">
           <form class="product-form" onsubmit="simpanProduk(event)">
             <div class="field">
               <label for="namaProduk">Nama Produk</label>
-              <input type="text" id="namaProduk" placeholder="Contoh: Nova X10 Pro" required>
+              <input type="text" id="namaProduk" placeholder="Contoh: Smartphone Nova X10" required>
             </div>
             <div class="field">
               <label for="kategoriProduk">Kategori</label>
-              <select id="kategoriProduk">
+              <select class="cat-select" id="kategoriProduk">
                 <option value="HP">HP / Smartphone</option>
                 <option value="Tablet">Tablet</option>
                 <option value="Laptop">Laptop</option>
-                <option value="Aksesoris">Aksesoris</option>
+                <option value="Aksesoris">Aksesoris HP</option>
               </select>
             </div>
             <div class="field">
               <label for="hargaProduk">Harga</label>
-              <input type="text" id="hargaProduk" placeholder="Contoh: Rp 12.000.000" required>
+              <input type="text" id="hargaProduk" placeholder="Contoh: Rp 5.500.000" required>
             </div>
             <div class="field">
-              <label for="deskripsi">Deskripsi</label>
-              <textarea id="deskripsi" placeholder="Deskripsi spesifikasi produk..." required></textarea>
-            </div>
-            <div class="field">
-              <label for="namaFileFoto">Nama File Foto (harus ada di folder assets/)</label>
-              <input type="text" id="namaFileFoto" placeholder="Contoh: nova-x10.jpg" required>
-            </div>
-            <div class="field">
-              <label for="namaFileVideo">Nama File Video (opsional)</label>
-              <input type="text" id="namaFileVideo" placeholder="Contoh: nova-x10-demo.mp4">
+              <label for="deskripsi">Deskripsi Produk</label>
+              <textarea id="deskripsi" placeholder="Contoh: Layar 120Hz, RAM 8GB, baterai 5000mAh" required></textarea>
             </div>
 
-            <button type="submit" class="save-btn">Simpan Produk</button>
+            <div class="field">
+              <label>Foto Produk (unggah dari perangkat)</label>
+              <div class="upload-box" id="fotoBox">
+                <div class="upload-empty" id="fotoEmpty" onclick="document.getElementById('fotoInput').click()">
+                  <div class="icon">📷</div>
+                  <div class="hint">Ketuk untuk pilih foto</div>
+                  <div class="subhint">JPG, PNG, atau WEBP</div>
+                </div>
+                <div class="upload-filled" id="fotoFilled">
+                  <img id="fotoImg" alt="Preview foto produk">
+                  <button type="button" class="upload-change-btn" onclick="document.getElementById('fotoInput').click()">Ganti Foto</button>
+                </div>
+                <input type="file" id="fotoInput" accept="image/*" onchange="previewFoto(event)" style="display:none">
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Video Produk (unggah dari perangkat, opsional)</label>
+              <div class="upload-box" id="videoBox">
+                <div class="upload-empty" id="videoEmpty" onclick="document.getElementById('videoInput').click()">
+                  <div class="icon">🎬</div>
+                  <div class="hint">Ketuk untuk pilih video</div>
+                  <div class="subhint">MP4 atau MOV</div>
+                </div>
+                <div class="upload-filled" id="videoFilled">
+                  <video id="videoPrev" controls playsinline webkit-playsinline="true" preload="metadata"></video>
+                  <button type="button" class="upload-change-btn" onclick="document.getElementById('videoInput').click()">Ganti Video</button>
+                </div>
+                <input type="file" id="videoInput" accept="video/*" onchange="previewVideo(event)" style="display:none">
+              </div>
+            </div>
+
+            <button type="submit" class="save-btn" id="btnSimpan">Simpan Produk ke Database</button>
           </form>
-          
-          <hr style="margin:20px 0; border:0; border-top:1px solid var(--pink-soft);">
-          
-          <button type="button" class="export-btn" onclick="salinArrayKodingan()">📋 Salin Kodingan Array (JSON)</button>
-          <small style="display:block; margin-top:6px; color:#8A5468;">Klik tombol di atas jika ingin menyalin data produk yang baru ditambahkan untuk ditempelkan permanen ke dalam file HTML ini.</small>
         </div>
       </section>
     </main>
 
-    <button class="fab-admin admin-only" onclick="gantiHalaman('input')">+ Tambah Produk</button>
+    <button class="fab-admin admin-only" id="fabInput" onclick="gantiHalaman('input')">
+      <span class="plus">+</span> Tambah Produk
+    </button>
+
+    <footer class="note">GADGET STORE — Prototype front-end, simpan otomatis</footer>
   </div>
 
-  <!-- MODAL DETAIL -->
   <div class="modal-overlay" id="modalOverlay" onclick="tutupModalJikaLuar(event)">
-    <div class="modal-box">
-      <button class="modal-close" onclick="tutupModal()">✕</button>
-      <div class="carousel-media" id="mediaContainer"></div>
-      <div class="modal-content">
-        <h2 id="modalNama"></h2>
-        <div class="price" id="modalHarga"></div>
-        <p id="modalDesc" style="color:#7A4B60; font-size:.9rem; line-height:1.5;"></p>
-        <div style="display:flex; gap:10px; margin-top:10px;">
-          <button style="flex:1; padding:10px; border:none; background:var(--pink-deep); color:#fff; border-radius:10px; font-weight:800; cursor:pointer;" onclick="tampilkanToast('Pesanan berhasil dibuat!')">Beli Sekarang</button>
-        </div>
-      </div>
-    </div>
+    <div class="modal-box" id="modalBox"></div>
   </div>
 
   <div class="toast" id="toast"></div>
 
+  <div class="confirm-overlay" id="confirmOverlay">
+    <div class="confirm-box">
+      <div class="icon">🗑️</div>
+      <h3>Hapus produk ini?</h3>
+      <p id="confirmText">Tindakan ini tidak bisa dibatalkan.</p>
+      <div class="confirm-actions">
+        <button class="confirm-cancel" onclick="batalHapus()">Batal</button>
+        <button class="confirm-delete" onclick="lanjutkanHapus()">Ya, Hapus</button>
+      </div>
+    </div>
+  </div>
+
 <script>
 let modeAktif = 'admin';
-let kategoriAktif = 'Semua';
 
-/* 
-  ======================================================
-  DATA DEFAULT PRODUK (MENGGUNAKAN FOLDER ASSETS)
-  ======================================================
-  Pastikan kamu memiliki folder bernama "assets" di samping file ini.
-*/
+function masuk(mode){
+  modeAktif = mode;
+  document.getElementById('dashboard').classList.toggle('mode-pembeli', mode === 'pembeli');
+  document.getElementById('dashboard').classList.toggle('mode-admin', mode === 'admin');
+  document.getElementById('intro').classList.add('hidden');
+  document.getElementById('dashboard').classList.add('show');
+  gantiHalaman('beranda');
+  renderKatalog();
+}
+
+function kembaliKeAwal(){
+  document.getElementById('modalOverlay').classList.remove('show');
+  document.getElementById('confirmOverlay').classList.remove('show');
+  idxAkanDihapus = null;
+  document.getElementById('dashboard').classList.remove('show', 'mode-pembeli', 'mode-admin');
+  document.getElementById('intro').classList.remove('hidden');
+  kategoriAktif = "Semua";
+  gantiHalaman('beranda');
+}
+
+function gantiHalaman(page){
+  if(page === 'input' && modeAktif !== 'admin') page = 'beranda';
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.getElementById('activePageLabel').textContent = page === 'beranda' ? 'Beranda' : 'Input Barang';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ================= SIMPAN/BACA LOCALSTORAGE ================= */
+const statusLabel = { belum:"Belum Dibayar", diproses:"Diproses", dikirim:"Dikirim", selesai:"Selesai" };
+let kategoriAktif = "Semua";
+
 const defaultProduk = [
   {
-    id: 1,
     nama: "Nova X10 Pro",
     kategori: "HP",
     harga: "Rp 12.000.000",
     deskripsi: "Layar AMOLED 120Hz, RAM 12GB/256GB, kamera triple 108MP, fast charging 65W.",
-    img: "assets/nova-x10.jpg",
-    video: "assets/nova-x10-demo.mp4",
+    img: "https://picsum.photos/seed/nova-x10/500/500",
+    video: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
     status: "belum"
   },
   {
-    id: 2,
     nama: "Tabsonic Air 11",
     kategori: "Tablet",
     harga: "Rp 6.500.000",
     deskripsi: "Layar 11\" 2K 90Hz, RAM 8GB/128GB, mendukung stylus, baterai 8000mAh.",
-    img: "assets/tabsonic.jpg",
+    img: "https://picsum.photos/seed/tabsonic-air/500/500",
     video: "",
     status: "diproses"
   }
 ];
 
-// Baca dari localStorage jika ada, jika tidak ada gunakan defaultProduk
-let produkList = JSON.parse(localStorage.getItem('gadget_store_assets_data')) || defaultProduk;
+let produkList = JSON.parse(localStorage.getItem('gadget_store_produk')) || defaultProduk;
 
-function simpanKeStorage() {
-  localStorage.setItem('gadget_store_assets_data', JSON.stringify(produkList));
+function simpanKeStorage(){
+  try {
+    localStorage.setItem('gadget_store_produk', JSON.stringify(produkList));
+  } catch (err) {
+    tampilkanToast("Penyimpanan penuh! Coba unggah video/foto berukuran lebih kecil.");
+  }
 }
 
-function masuk(mode) {
-  modeAktif = mode;
-  document.getElementById('dashboard').classList.toggle('mode-pembeli', mode === 'pembeli');
-  document.getElementById('intro').classList.add('hidden');
-  document.getElementById('dashboard').classList.add('show');
-  gantiHalaman('beranda');
-  renderChips();
-  renderKatalog();
-}
-
-function kembaliKeAwal() {
-  document.getElementById('dashboard').classList.remove('show');
-  document.getElementById('intro').classList.remove('hidden');
-}
-
-function gantiHalaman(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
-  window.scrollTo({top:0, behavior:'smooth'});
-}
-
-function renderChips() {
+function renderChips(){
   const kategoriUnik = ["Semua", ...new Set(produkList.map(p => p.kategori))];
   const row = document.getElementById('chipRow');
   row.innerHTML = "";
@@ -394,124 +712,311 @@ function renderChips() {
   });
 }
 
-function renderKatalog() {
-  const grid = document.getElementById('catalogGrid');
-  grid.innerHTML = "";
-  
-  const filtered = kategoriAktif === "Semua" ? produkList : produkList.filter(p => p.kategori === kategoriAktif);
-  document.getElementById('jumlahProduk').textContent = filtered.length + " produk";
+function buatKartuProduk(p){
+  const idx = produkList.indexOf(p);
+  const card = document.createElement('div');
+  card.className = "product-card";
+  card.onclick = () => bukaModal(idx);
+  card.innerHTML = `
+    <div class="thumb-wrap">
+      <img src="${p.img}" alt="${p.nama}">
+      <span class="badge-kategori">${p.kategori}</span>
+      <button class="delete-btn admin-only" title="Hapus produk" onclick="event.stopPropagation(); hapusProduk(${idx})">✕</button>
+      ${p.video ? '<span class="badge-video">▶ Video</span>' : ''}
+    </div>
+    <div class="product-body">
+      <h3>${p.nama}</h3>
+      <div class="price">${p.harga}</div>
+      <span class="stamp ${p.status}">${statusLabel[p.status]}</span>
+    </div>
+  `;
+  return card;
+}
 
-  if (filtered.length === 0) {
-    grid.innerHTML = '<div style="text-align:center; padding:40px; color:var(--pink-deeper);">Belum ada produk.</div>';
+function renderKatalog(){
+  const grid = document.getElementById('catalogGrid');
+
+  if(produkList.length === 0){
+    document.getElementById('jumlahProduk').textContent = "0 produk";
+    grid.className = "";
+    grid.innerHTML = '<div class="empty-state">Belum ada produk.<br>Tambahkan lewat menu "Input Barang".</div>';
     return;
   }
 
-  const container = document.createElement('div');
-  container.className = "catalog-grid";
-
-  filtered.forEach((p) => {
-    const idxOriginal = produkList.indexOf(p);
-    const card = document.createElement('div');
-    card.className = "product-card";
-    card.onclick = () => bukaModal(idxOriginal);
-    card.innerHTML = `
-      <div class="thumb-wrap">
-        <img src="${p.img}" alt="${p.nama}" onerror="this.src='https://via.placeholder.com/300x300?text=Gambar+Tidak+Ada'">
-        <span class="badge-kategori">${p.kategori}</span>
-        ${p.video ? '<span class="badge-video">▶ Video</span>' : ''}
-        <button class="delete-btn admin-only" title="Hapus produk" onclick="event.stopPropagation(); hapusProduk(${idxOriginal})">✕</button>
-      </div>
-      <div class="product-body">
-        <h3>${p.nama}</h3>
-        <div class="price">${p.harga}</div>
-        <span class="stamp ${p.status}">${p.status}</span>
-      </div>
-    `;
-    container.appendChild(card);
-  });
-
-  grid.appendChild(container);
-}
-
-function simpanProduk(e) {
-  e.preventDefault();
-  
-  const nama = document.getElementById('namaProduk').value;
-  const kategori = document.getElementById('kategoriProduk').value;
-  const harga = document.getElementById('hargaProduk').value;
-  const deskripsi = document.getElementById('deskripsi').value;
-  const foto = document.getElementById('namaFileFoto').value.trim();
-  const video = document.getElementById('namaFileVideo').value.trim();
-
-  const produkBaru = {
-    id: Date.now(),
-    nama: nama,
-    kategori: kategori,
-    harga: harga,
-    deskripsi: deskripsi,
-    img: `assets/${foto}`,
-    video: video ? `assets/${video}` : "",
-    status: "belum"
-  };
-
-  produkList.push(produkBaru);
-  simpanKeStorage();
-
-  e.target.reset();
-  tampilkanToast("Produk berhasil ditambahkan!");
-  renderChips();
-  renderKatalog();
-  gantiHalaman('beranda');
-}
-
-function hapusProduk(idx) {
-  if (confirm("Yakin ingin menghapus produk ini?")) {
-    produkList.splice(idx, 1);
-    simpanKeStorage();
-    renderChips();
-    renderKatalog();
-    tampilkanToast("Produk telah dihapus.");
+  if(kategoriAktif === "Semua"){
+    document.getElementById('jumlahProduk').textContent = produkList.length + " produk";
+    grid.className = "";
+    grid.innerHTML = "";
+    const kategoriUnik = [...new Set(produkList.map(p => p.kategori))];
+    kategoriUnik.forEach(kat => {
+      const items = produkList.filter(p => p.kategori === kat);
+      const section = document.createElement('div');
+      section.className = "category-section";
+      section.innerHTML = `
+        <div class="category-section-head">
+          <h3>${kat}</h3>
+          <span class="count">${items.length} produk</span>
+        </div>
+        <div class="catalog-grid"></div>
+      `;
+      const innerGrid = section.querySelector('.catalog-grid');
+      items.forEach(p => innerGrid.appendChild(buatKartuProduk(p)));
+      grid.appendChild(section);
+    });
+    return;
   }
+
+  const filtered = produkList.filter(p => p.kategori === kategoriAktif);
+  document.getElementById('jumlahProduk').textContent = filtered.length + " produk";
+  grid.className = "catalog-grid";
+  grid.innerHTML = "";
+  if(filtered.length === 0){
+    grid.innerHTML = '<div class="empty-state">Belum ada produk di kategori ini.</div>';
+    return;
+  }
+  filtered.forEach(p => grid.appendChild(buatKartuProduk(p)));
 }
 
-function bukaModal(idx) {
+/* ================= MODAL & CAROUSEL ================= */
+let slideAktif = 0;
+let totalSlide = 1;
+
+function bukaModal(idx){
   const p = produkList[idx];
-  document.getElementById('modalNama').textContent = p.nama;
-  document.getElementById('modalHarga').textContent = p.harga;
-  document.getElementById('modalDesc').textContent = p.deskripsi;
+  const box = document.getElementById('modalBox');
+  const adaVideo = !!p.video;
+  totalSlide = adaVideo ? 2 : 1;
+  slideAktif = 0;
 
-  const container = document.getElementById('mediaContainer');
-  if (p.video) {
-    container.innerHTML = `<video src="${p.video}" controls autoplay style="width:100%; height:100%;"></video>`;
-  } else {
-    container.innerHTML = `<img src="${p.img}" alt="${p.nama}">`;
-  }
-
+  box.innerHTML = `
+    <button class="modal-close" onclick="tutupModal()">✕</button>
+    <div class="carousel" id="carousel">
+      <span class="carousel-label" id="carouselLabel">Foto</span>
+      <div class="carousel-track" id="carouselTrack">
+        <div class="carousel-slide"><img src="${p.img}" alt="${p.nama}"></div>
+        ${adaVideo ? `<div class="carousel-slide">
+          <div class="video-wrap">
+            <video id="carouselVideo" playsinline webkit-playsinline="true" preload="metadata" src="${p.video}"></video>
+            <button type="button" class="video-tap-layer" onclick="toggleVideoPlay()"></button>
+            <button type="button" class="video-play-btn" id="videoPlayBtn" onclick="toggleVideoPlay()">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+            <button type="button" class="video-mute-btn" id="videoMuteBtn" onclick="toggleVideoMute(event)">🔊</button>
+            <div class="video-progress"><div class="video-progress-fill" id="videoProgressFill"></div></div>
+          </div>
+        </div>` : ''}
+      </div>
+      ${adaVideo ? `
+      <button class="carousel-arrow left" onclick="geserSlide(-1)">‹</button>
+      <button class="carousel-arrow right" onclick="geserSlide(1)">›</button>
+      <div class="carousel-dots">
+        <span class="dot active" onclick="pilihSlide(0)"></span>
+        <span class="dot" onclick="pilihSlide(1)"></span>
+      </div>` : ''}
+    </div>
+    <div class="modal-content">
+      <h2>${p.nama}</h2>
+      <div class="price">${p.harga}</div>
+      <div class="desc">${p.deskripsi}</div>
+      <div class="status-block">
+        <div class="status-block-title">Status Pesanan</div>
+        <div class="status-tracker" id="statusTracker">${buildStatusTracker(p.status)}</div>
+        <div class="status-admin-row admin-only">
+          <span class="status-admin-label">Ubah status pesanan</span>
+          <select class="status-select" onchange="ubahStatus(${idx}, this.value)">
+            <option value="belum" ${p.status==='belum'?'selected':''}>Belum Dibayar</option>
+            <option value="diproses" ${p.status==='diproses'?'selected':''}>Diproses</option>
+            <option value="dikirim" ${p.status==='dikirim'?'selected':''}>Dikirim</option>
+            <option value="selesai" ${p.status==='selesai'?'selected':''}>Selesai</option>
+          </select>
+        </div>
+      </div>
+      <button class="buy-btn" onclick="beliSekarang(${idx})">Beli Sekarang</button>
+      <button class="danger-btn admin-only" onclick="hapusProduk(${idx})">Hapus Produk</button>
+    </div>
+  `;
   document.getElementById('modalOverlay').classList.add('show');
 }
 
-function tutupModal() {
-  document.getElementById('modalOverlay').classList.remove('show');
-  document.getElementById('mediaContainer').innerHTML = "";
+function toggleVideoPlay(){
+  const vid = document.getElementById('carouselVideo');
+  if(!vid) return;
+  if(vid.paused){ vid.play(); } else { vid.pause(); }
 }
 
-function tutupModalJikaLuar(e) {
-  if (e.target.id === 'modalOverlay') tutupModal();
+function toggleVideoMute(e){
+  e.stopPropagation();
+  const vid = document.getElementById('carouselVideo');
+  const btn = document.getElementById('videoMuteBtn');
+  if(!vid) return;
+  vid.muted = !vid.muted;
+  btn.textContent = vid.muted ? '🔇' : '🔊';
 }
 
-function salinArrayKodingan() {
-  const textJSON = JSON.stringify(produkList, null, 2);
-  navigator.clipboard.writeText(textJSON).then(() => {
-    tampilkanToast("Data JSON berhasil disalin ke clipboard!");
+function terapkanSlide(){
+  const track = document.getElementById('carouselTrack');
+  if(!track) return;
+  track.style.transform = `translateX(-${slideAktif * 100}%)`;
+  document.querySelectorAll('#carouselDots .dot').forEach((d, i) => {
+    d.classList.toggle('active', i === slideAktif);
   });
+  const label = document.getElementById('carouselLabel');
+  if(label) label.textContent = slideAktif === 0 ? 'Foto' : 'Video';
 }
 
-function tampilkanToast(msg) {
+function geserSlide(arah){
+  slideAktif = (slideAktif + arah + totalSlide) % totalSlide;
+  terapkanSlide();
+}
+
+function pilihSlide(i){
+  slideAktif = i;
+  terapkanSlide();
+}
+
+function tutupModal(){
+  document.getElementById('modalOverlay').classList.remove('show');
+}
+function tutupModalJikaLuar(e){ if(e.target.id === 'modalOverlay') tutupModal(); }
+
+const urutanStatus = ['belum', 'diproses', 'dikirim', 'selesai'];
+
+function buildStatusTracker(status){
+  const currentIdx = urutanStatus.indexOf(status);
+  return urutanStatus.map((s, i) => {
+    let cls = 'step';
+    if(i < currentIdx) cls += ' done';
+    else if(i === currentIdx) cls += ' active';
+    return `<div class="${cls}"><span class="dot"></span><span>${statusLabel[s]}</span></div>`;
+  }).join('');
+}
+
+function ubahStatus(idx, value){
+  produkList[idx].status = value;
+  simpanKeStorage();
+  const tracker = document.getElementById('statusTracker');
+  if(tracker) tracker.innerHTML = buildStatusTracker(value);
+  renderKatalog();
+}
+
+let idxAkanDihapus = null;
+
+function hapusProduk(idx){
+  if(modeAktif !== 'admin') return;
+  const p = produkList[idx];
+  if(!p) return;
+  idxAkanDihapus = idx;
+  document.getElementById('confirmText').textContent = `"${p.nama}" akan dihapus secara permanen.`;
+  document.getElementById('confirmOverlay').classList.add('show');
+}
+
+function batalHapus(){
+  idxAkanDihapus = null;
+  document.getElementById('confirmOverlay').classList.remove('show');
+}
+
+function lanjutkanHapus(){
+  if(idxAkanDihapus === null) return;
+  const p = produkList[idxAkanDihapus];
+  produkList.splice(idxAkanDihapus, 1);
+  simpanKeStorage();
+  idxAkanDihapus = null;
+  document.getElementById('confirmOverlay').classList.remove('show');
+  tutupModal();
+  renderChips();
+  renderKatalog();
+  tampilkanToast(`Produk "${p.nama}" telah dihapus.`);
+}
+
+function beliSekarang(idx){
+  produkList[idx].status = "diproses";
+  ubahStatus(idx, "diproses");
+  tampilkanToast(`Pesanan "${produkList[idx].nama}" sedang diproses.`);
+}
+
+/* ================= UPLOAD FOTO / VIDEO ================= */
+let fotoTerpilih = null;
+let videoTerpilih = null;
+
+function previewFoto(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    fotoTerpilih = reader.result;
+    document.getElementById('fotoImg').src = fotoTerpilih;
+    document.getElementById('fotoEmpty').style.display = 'none';
+    document.getElementById('fotoFilled').classList.add('show');
+    document.getElementById('fotoBox').classList.add('filled');
+  };
+  reader.readAsDataURL(file);
+}
+
+function previewVideo(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    videoTerpilih = reader.result;
+    document.getElementById('videoPrev').src = videoTerpilih;
+    document.getElementById('videoEmpty').style.display = 'none';
+    document.getElementById('videoFilled').classList.add('show');
+    document.getElementById('videoBox').classList.add('filled');
+  };
+  reader.readAsDataURL(file);
+}
+
+function simpanProduk(e){
+  e.preventDefault();
+  if(modeAktif !== 'admin') return;
+  const nama = document.getElementById('namaProduk').value.trim();
+  const kategori = document.getElementById('kategoriProduk').value;
+  const harga = document.getElementById('hargaProduk').value.trim();
+  const deskripsi = document.getElementById('deskripsi').value.trim();
+
+  if(!fotoTerpilih){
+    tampilkanToast("Silakan unggah foto produk terlebih dahulu.");
+    return;
+  }
+
+  produkList.push({
+    nama, kategori, harga, deskripsi,
+    img: fotoTerpilih,
+    video: videoTerpilih || "",
+    status: "belum"
+  });
+
+  simpanKeStorage();
+
+  e.target.reset();
+  document.getElementById('fotoImg').src = "";
+  document.getElementById('fotoEmpty').style.display = 'flex';
+  document.getElementById('fotoFilled').classList.remove('show');
+  document.getElementById('fotoBox').classList.remove('filled');
+  document.getElementById('videoPrev').src = "";
+  document.getElementById('videoEmpty').style.display = 'flex';
+  document.getElementById('videoFilled').classList.remove('show');
+  document.getElementById('videoBox').classList.remove('filled');
+  fotoTerpilih = null;
+  videoTerpilih = null;
+
+  renderChips();
+  renderKatalog();
+  tampilkanToast(`Produk "${nama}" berhasil disimpan.`);
+  gantiHalaman('beranda');
+}
+
+let toastTimeout;
+function tampilkanToast(msg){
   const toast = document.getElementById('toast');
   toast.textContent = msg;
   toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2500);
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => toast.classList.remove('show'), 2600);
 }
+
+renderChips();
+renderKatalog();
 </script>
 </body>
 </html>
