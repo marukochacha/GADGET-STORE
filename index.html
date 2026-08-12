@@ -253,6 +253,7 @@
   }
   .modal-overlay.show{ display:flex; }
   .modal-box{
+    position:relative;
     background:var(--pink-card); width:100%; max-width:520px; max-height:88vh; overflow-y:auto;
     border-radius:24px 24px 0 0; padding:0; animation:slideUp .3s ease;
   }
@@ -261,22 +262,53 @@
     .modal-box{ border-radius:20px; }
   }
   @keyframes slideUp{ from{ transform:translateY(40px); opacity:0;} to{transform:translateY(0); opacity:1;} }
+  
+  /* Tombol Tutup diletakkan rapi di pojok kanan atas modal */
   .modal-close{
-    position:sticky; top:10px; float:right; margin-right:12px; margin-top:10px;
+    position:absolute; top:12px; right:12px;
     width:34px; height:34px; border-radius:50%; border:none;
-    background:rgba(90,35,64,.8); color:#fff; font-size:1rem; cursor:pointer; z-index:6;
+    background:rgba(0,0,0,.5); color:#fff; font-size:1rem; cursor:pointer; z-index:20;
+    display:flex; align-items:center; justify-content:center;
+    transition:background .2s;
   }
+  .modal-close:hover{ background:rgba(0,0,0,.8); }
 
   /* --- Carousel: slide 1 foto, slide 2 video --- */
-  .carousel{ position:relative; background:#000; }
+  .carousel{ position:relative; background:#000; overflow:hidden; }
   .carousel-track{
     display:flex; transition:transform .35s ease;
     cursor:grab; touch-action:pan-y; user-select:none; -webkit-user-select:none;
   }
   .carousel-track:active{ cursor:grabbing; }
   .carousel-slide{ flex:0 0 100%; width:100%; height:260px; }
-  .carousel-slide img, .carousel-slide video{ width:100%; height:100%; object-fit:cover; display:block; background:#000; pointer-events:none; }
-  .carousel-slide video{ pointer-events:auto; }
+  .carousel-slide img{ width:100%; height:100%; object-fit:cover; display:block; background:#000; pointer-events:none; }
+
+  /* --- Kontrol video custom --- */
+  .video-wrap{ position:relative; width:100%; height:100%; background:#000; }
+  .video-wrap video{ width:100%; height:100%; object-fit:contain; display:block; background:#000; }
+  .video-tap-layer{ position:absolute; inset:0; z-index:2; cursor:pointer; background:transparent; border:none; padding:0; }
+  .video-play-btn{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%) scale(1);
+    width:54px; height:54px; border-radius:50%; border:none;
+    background:rgba(255,255,255,.94); color:var(--pink-deeper);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; z-index:3; box-shadow:0 10px 22px rgba(0,0,0,.3);
+    transition:opacity .2s ease, transform .2s ease;
+  }
+  .video-play-btn svg{ width:22px; height:22px; margin-left:3px; }
+  .video-play-btn.hide{ opacity:0; transform:translate(-50%,-50%) scale(.8); pointer-events:none; }
+  .video-mute-btn{
+    position:absolute; right:10px; bottom:10px; z-index:3;
+    width:30px; height:30px; border-radius:50%; border:none;
+    background:rgba(0,0,0,.5); color:#fff; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; font-size:.85rem;
+  }
+  .video-progress{
+    position:absolute; left:0; right:0; bottom:0; height:3px; z-index:3;
+    background:rgba(255,255,255,.28);
+  }
+  .video-progress-fill{ height:100%; width:0%; background:var(--pink-mid); }
+
   .carousel-arrow{
     position:absolute; top:50%; transform:translateY(-50%); z-index:5;
     width:34px; height:34px; border-radius:50%; border:none; cursor:pointer;
@@ -305,7 +337,7 @@
   .modal-content .price{ font-size:1.2rem; }
   .modal-content .desc{ font-size:.9rem; line-height:1.6; color:#7A4B60; white-space:pre-line; }
 
-  /* --- Pelacak status pesanan (rapi untuk pembeli & admin) --- */
+  /* --- Pelacak status pesanan --- */
   .status-block{
     background:var(--pink-bg); border-radius:16px; padding:16px 14px 14px;
     display:flex; flex-direction:column; gap:14px;
@@ -579,7 +611,7 @@
                   <div class="subhint">MP4 atau MOV</div>
                 </div>
                 <div class="upload-filled" id="videoFilled">
-                  <video id="videoPrev" controls></video>
+                  <video id="videoPrev" controls playsinline webkit-playsinline="true" preload="metadata"></video>
                   <button type="button" class="upload-change-btn" onclick="document.getElementById('videoInput').click()">Ganti Video</button>
                 </div>
                 <input type="file" id="videoInput" accept="video/*" onchange="previewVideo(event)" style="display:none">
@@ -635,7 +667,6 @@ function masuk(mode){
 }
 
 function kembaliKeAwal(){
-  // Tutup modal/konfirmasi yang mungkin masih terbuka sebelum balik ke halaman awal.
   document.getElementById('modalOverlay').classList.remove('show');
   document.getElementById('confirmOverlay').classList.remove('show');
   idxAkanDihapus = null;
@@ -648,7 +679,6 @@ function kembaliKeAwal(){
 }
 
 function gantiHalaman(page){
-  // Pembeli tidak boleh membuka halaman Input Barang sama sekali.
   if(page === 'input' && modeAktif !== 'admin') page = 'beranda';
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
@@ -744,7 +774,6 @@ function renderKatalog(){
   }
 
   if(kategoriAktif === "Semua"){
-    // Etalase dikelompokkan rapi per kategori supaya mudah dipindai.
     document.getElementById('jumlahProduk').textContent = produkList.length + " produk";
     grid.className = "";
     grid.innerHTML = "";
@@ -796,7 +825,17 @@ function bukaModal(idx){
       <span class="carousel-label" id="carouselLabel">Foto</span>
       <div class="carousel-track" id="carouselTrack">
         <div class="carousel-slide"><img src="${p.img}" alt="${p.nama}"></div>
-        ${adaVideo ? `<div class="carousel-slide"><video controls src="${p.video}"></video></div>` : ''}
+        ${adaVideo ? `<div class="carousel-slide">
+          <div class="video-wrap" id="videoWrap">
+            <video id="carouselVideo" playsinline webkit-playsinline="true" preload="metadata" src="${p.video}"></video>
+            <button type="button" class="video-tap-layer" onclick="toggleVideoPlay()" aria-label="Putar/jeda video"></button>
+            <button type="button" class="video-play-btn" id="videoPlayBtn" onclick="toggleVideoPlay()" aria-label="Putar video">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+            <button type="button" class="video-mute-btn" id="videoMuteBtn" onclick="toggleVideoMute(event)" aria-label="Bisukan/suarakan">🔊</button>
+            <div class="video-progress"><div class="video-progress-fill" id="videoProgressFill"></div></div>
+          </div>
+        </div>` : ''}
       </div>
       ${adaVideo ? `
       <button class="carousel-arrow left" onclick="geserSlide(-1)">‹</button>
@@ -829,6 +868,41 @@ function bukaModal(idx){
   `;
   document.getElementById('modalOverlay').classList.add('show');
   pasangGeserSentuh();
+  if(adaVideo) pasangKontrolVideo();
+}
+
+function pasangKontrolVideo(){
+  const vid = document.getElementById('carouselVideo');
+  if(!vid) return;
+  const btn = document.getElementById('videoPlayBtn');
+  const fill = document.getElementById('videoProgressFill');
+
+  vid.addEventListener('play', () => btn.classList.add('hide'));
+  vid.addEventListener('pause', () => btn.classList.remove('hide'));
+  vid.addEventListener('ended', () => btn.classList.remove('hide'));
+  vid.addEventListener('timeupdate', () => {
+    if(vid.duration){ fill.style.width = (vid.currentTime / vid.duration * 100) + '%'; }
+  });
+}
+
+function toggleVideoPlay(){
+  const vid = document.getElementById('carouselVideo');
+  if(!vid) return;
+  if(vid.paused){ vid.play(); } else { vid.pause(); }
+}
+
+function toggleVideoMute(e){
+  e.stopPropagation();
+  const vid = document.getElementById('carouselVideo');
+  const btn = document.getElementById('videoMuteBtn');
+  if(!vid) return;
+  vid.muted = !vid.muted;
+  btn.textContent = vid.muted ? '🔇' : '🔊';
+}
+
+function hentikanVideoJikaAda(){
+  const vid = document.getElementById('carouselVideo');
+  if(vid && !vid.paused) vid.pause();
 }
 
 function pasangGeserSentuh(){
@@ -884,14 +958,19 @@ function terapkanSlide(){
 function geserSlide(arah){
   slideAktif = (slideAktif + arah + totalSlide) % totalSlide;
   terapkanSlide();
+  hentikanVideoJikaAda();
 }
 
 function pilihSlide(i){
   slideAktif = i;
   terapkanSlide();
+  hentikanVideoJikaAda();
 }
 
-function tutupModal(){ document.getElementById('modalOverlay').classList.remove('show'); }
+function tutupModal(){
+  hentikanVideoJikaAda();
+  document.getElementById('modalOverlay').classList.remove('show');
+}
 function tutupModalJikaLuar(e){ if(e.target.id === 'modalOverlay') tutupModal(); }
 
 const urutanStatus = ['belum', 'diproses', 'dikirim', 'selesai'];
@@ -916,7 +995,6 @@ function ubahStatus(idx, value){
 let idxAkanDihapus = null;
 
 function hapusProduk(idx){
-  // Pengaman tambahan: hanya admin yang boleh memicu penghapusan produk.
   if(modeAktif !== 'admin') return;
   const p = produkList[idx];
   if(!p) return;
@@ -948,7 +1026,7 @@ function beliSekarang(idx){
   tampilkanToast(`Pesanan "${produkList[idx].nama}" sedang diproses.`);
 }
 
-/* ================= UPLOAD FOTO / VIDEO (BASE64, TANPA LINK) ================= */
+/* ================= UPLOAD FOTO / VIDEO ================= */
 let fotoTerpilih = null;
 let videoTerpilih = null;
 
