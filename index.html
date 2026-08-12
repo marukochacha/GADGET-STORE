@@ -125,6 +125,11 @@
   }
   .chip.active, .chip:hover{ background:var(--pink-deep); color:#fff; border-color:var(--pink-deep); }
 
+  .category-section{ margin-bottom:30px; }
+  .category-section-head{ display:flex; align-items:baseline; gap:9px; margin-bottom:13px; padding-bottom:9px; border-bottom:1.5px solid var(--pink-soft); }
+  .category-section-head h3{ font-size:1.02rem; color:var(--plum); }
+  .category-section-head .count{ font-size:.7rem; color:#fff; background:var(--pink-mid); font-weight:800; padding:2px 10px; border-radius:999px; }
+
   .catalog-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:14px; }
   @media(min-width:900px){ .catalog-grid{ grid-template-columns:repeat(4, 1fr); } }
 
@@ -166,7 +171,7 @@
   button.save-btn:hover{ background:var(--pink-deep); }
   button.export-btn{ background:var(--plum); color:#fff; border:none; padding:12px 20px; border-radius:12px; font-weight:800; cursor:pointer; margin-top:10px; }
 
-  /* ===== MODAL ===== */
+  /* ===== MODAL & CAROUSEL ===== */
   .modal-overlay{ position:fixed; inset:0; background:rgba(90,35,64,.45); z-index:150; display:none; align-items:center; justify-content:center; }
   .modal-overlay.show{ display:flex; }
   .modal-box{ background:var(--pink-card); width:100%; max-width:480px; border-radius:20px; overflow:hidden; position:relative; }
@@ -237,7 +242,7 @@
           <h2>Daftar Produk</h2>
           <span class="sub" id="jumlahProduk">0 produk</span>
         </div>
-        <p class="lead-text">Foto &amp; video dimuat langsung dari folder <code>assets/</code> di repositori.</p>
+        <p class="lead-text">Foto &amp; video dimuat dari folder <code>assets/</code> di repositori proyekmu.</p>
         <div class="chip-row" id="chipRow"></div>
         <div id="catalogGrid"></div>
       </section>
@@ -249,13 +254,13 @@
           <span class="tag">Admin</span>
           <h2>Tambah Produk Baru</h2>
         </div>
-        <p class="lead-text">Pastikan nama file foto &amp; video yang dimasukkan sesuai dengan yang ada di folder <code>assets/</code>.</p>
+        <p class="lead-text">Pastikan file foto &amp; video sudah ditaruh di folder <code>assets/</code> sebelum menginputkan nama filenya.</p>
         
         <div class="card">
           <form class="product-form" onsubmit="simpanProduk(event)">
             <div class="field">
               <label for="namaProduk">Nama Produk</label>
-              <input type="text" id="namaProduk" placeholder="Contoh: iPhone 15" required>
+              <input type="text" id="namaProduk" placeholder="Contoh: Nova X10 Pro" required>
             </div>
             <div class="field">
               <label for="kategoriProduk">Kategori</label>
@@ -268,19 +273,19 @@
             </div>
             <div class="field">
               <label for="hargaProduk">Harga</label>
-              <input type="text" id="hargaProduk" placeholder="Contoh: Rp 15.000.000" required>
+              <input type="text" id="hargaProduk" placeholder="Contoh: Rp 12.000.000" required>
             </div>
             <div class="field">
               <label for="deskripsi">Deskripsi</label>
               <textarea id="deskripsi" placeholder="Deskripsi spesifikasi produk..." required></textarea>
             </div>
             <div class="field">
-              <label for="namaFileFoto">Nama File Foto (di folder assets/)</label>
-              <input type="text" id="namaFileFoto" placeholder="Contoh: IPHONE 15.jpg" required>
+              <label for="namaFileFoto">Nama File Foto (harus ada di folder assets/)</label>
+              <input type="text" id="namaFileFoto" placeholder="Contoh: nova-x10.jpg" required>
             </div>
             <div class="field">
               <label for="namaFileVideo">Nama File Video (opsional)</label>
-              <input type="text" id="namaFileVideo" placeholder="Contoh: VIDIPHON 15.mp4">
+              <input type="text" id="namaFileVideo" placeholder="Contoh: nova-x10-demo.mp4">
             </div>
 
             <button type="submit" class="save-btn">Simpan Produk</button>
@@ -289,6 +294,7 @@
           <hr style="margin:20px 0; border:0; border-top:1px solid var(--pink-soft);">
           
           <button type="button" class="export-btn" onclick="salinArrayKodingan()">📋 Salin Kodingan Array (JSON)</button>
+          <small style="display:block; margin-top:6px; color:#8A5468;">Klik tombol di atas jika ingin menyalin data produk yang baru ditambahkan untuk ditempelkan permanen ke dalam file HTML ini.</small>
         </div>
       </section>
     </main>
@@ -318,50 +324,36 @@
 let modeAktif = 'admin';
 let kategoriAktif = 'Semua';
 
-/* DATA PRODUK SESUAI DENGAN FOTO & VIDEO DI REPOSITORI GITHUB */
+/* 
+  ======================================================
+  DATA DEFAULT PRODUK (MENGGUNAKAN FOLDER ASSETS)
+  ======================================================
+  Pastikan kamu memiliki folder bernama "assets" di samping file ini.
+*/
 const defaultProduk = [
   {
     id: 1,
-    nama: "iPhone 15",
+    nama: "Nova X10 Pro",
     kategori: "HP",
-    harga: "Rp 15.000.000",
-    deskripsi: "iPhone 15 dengan kamera canggih dan performa tinggi.",
-    img: "assets/IPHONE 15.jpg",
-    video: "assets/VIDIPHON 15.mp4",
+    harga: "Rp 12.000.000",
+    deskripsi: "Layar AMOLED 120Hz, RAM 12GB/256GB, kamera triple 108MP, fast charging 65W.",
+    img: "assets/nova-x10.jpg",
+    video: "assets/nova-x10-demo.mp4",
     status: "belum"
   },
   {
     id: 2,
-    nama: "iPad",
+    nama: "Tabsonic Air 11",
     kategori: "Tablet",
-    harga: "Rp 10.000.000",
-    deskripsi: "iPad untuk kebutuhan produktivitas dan desain.",
-    img: "assets/IPAD.jpg",
-    video: "assets/VIDIPAD.mp4",
-    status: "belum"
-  },
-  {
-    id: 3,
-    nama: "MacBook",
-    kategori: "Laptop",
-    harga: "Rp 20.000.000",
-    deskripsi: "MacBook performa cepat untuk pekerjaan berat.",
-    img: "assets/MACBOOK.jpg",
-    video: "assets/VIDMACBOOK.mp4",
-    status: "belum"
-  },
-  {
-    id: 4,
-    nama: "Case",
-    kategori: "Aksesoris",
-    harga: "Rp 150.000",
-    deskripsi: "Pelindung gadget berkualitas.",
-    img: "assets/CASE.jpg",
-    video: "assets/VIDCASE.mp4",
-    status: "belum"
+    harga: "Rp 6.500.000",
+    deskripsi: "Layar 11\" 2K 90Hz, RAM 8GB/128GB, mendukung stylus, baterai 8000mAh.",
+    img: "assets/tabsonic.jpg",
+    video: "",
+    status: "diproses"
   }
 ];
 
+// Baca dari localStorage jika ada, jika tidak ada gunakan defaultProduk
 let produkList = JSON.parse(localStorage.getItem('gadget_store_assets_data')) || defaultProduk;
 
 function simpanKeStorage() {
